@@ -64,10 +64,9 @@ export function registerModules(
     const tsUtils = new TsUtils();
 
     let sourceFile = tsUtils.parse(source);
-
     sourceFile = tsUtils.registerModules(sourceFile, config.modules);
 
     const output = tsUtils.renderFile(sourceFile);
-    console.log(output);
+    fs.writeFileSync(modulePath, output);
   }
 }
