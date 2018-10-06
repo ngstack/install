@@ -1,5 +1,5 @@
 import program from 'commander';
-import Install from './install';
+import { loadConfig, install } from './utils';
 
 program
   .version('0.1.0', '-v, --version')
@@ -11,8 +11,13 @@ program
   )
   .arguments('<lib>')
   .action((lib: string, options: any) => {
-    const install = new Install();
-    install.run(lib);
+    const config = loadConfig(options.config);
+
+    if (config) {
+      console.log(config);
+
+      install(lib);
+    }
   });
 
 program.parse(process.argv);
