@@ -1,5 +1,6 @@
 import program from 'commander';
-import { loadConfig, install } from './utils';
+import { loadConfig, install, copyAssets } from './utils';
+import Options from './options';
 
 program
   .version('0.1.0', '-v, --version')
@@ -10,16 +11,19 @@ program
     'set library name if installing from custom sources',
     null
   )
+  .option('--module', 'module to use for the registration', 'app')
   .option('--skip-install', 'skip installing dependency')
-  .action((lib: string, name: string, options: any) => {
-    console.log(name, options.skipInstall);
+  .action((lib: string, name: string, options: Options) => {
+    const libName = name || lib;
 
     if (!options.skipInstall) {
       install(lib);
     }
 
-    const config = loadConfig(name || lib);
-    console.log(config);
+    const config = loadConfig(libName);
+    if (config) {
+      copyAssets(libName, config);
+    }
   });
 
 program.parse(process.argv);
