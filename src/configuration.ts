@@ -7,7 +7,6 @@ interface Configuration {
   modules?: Array<{
     name: string;
     namespace: string;
-    declaration?: string;
   }>;
 }
 

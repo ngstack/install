@@ -23,11 +23,11 @@
   "homepage": "https://github.com/ngstack/install#readme",
   "dependencies": {
     "commander": "^2.18.0",
-    "shelljs": "^0.8.2"
+    "shelljs": "^0.8.2",
+    "typescript": "^3.1.1"
   },
   "devDependencies": {
     "@types/node": "^10.11.4",
-    "@types/shelljs": "^0.8.0",
-    "typescript": "^3.1.1"
+    "@types/shelljs": "^0.8.0"
   }
 }

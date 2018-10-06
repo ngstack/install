@@ -5,7 +5,7 @@
     "module": "commonjs",
     "lib": ["es2017"],
     "outDir": "./bin",
-    "strict": true,
+    "strict": false,
     "noUnusedLocals": true,
     "moduleResolution": "node",
     "typeRoots": ["node_modules/@types"],

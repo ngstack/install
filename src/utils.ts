@@ -1,7 +1,9 @@
 import sh from 'shelljs';
 import path from 'path';
+import fs from 'fs';
 
 import Configuration from './configuration';
+import TsUtils from './ts-utils';
 
 export function loadConfig(lib: string): Configuration | undefined {
   const configPath = path.join(process.cwd(), 'node_modules', lib, 'ngi.json');
@@ -45,4 +47,28 @@ export function copyAssets(lib: string, config: Configuration): void {
       sh.cp(from, to);
     });
   }
+}
+
+export function registerModules(
+  lib: string,
+  moduleName: string,
+  config: Configuration
+): void {
+  const modulePath = path.join(
+    process.cwd(),
+    'src/app',
+    `${moduleName}.module.ts`
+  );
+
+  const source = fs.readFileSync(modulePath).toString();
+  const tsUtils = new TsUtils();
+  let sourceFile = tsUtils.parse(source);
+
+  config.modules.forEach(mod => {
+    sourceFile = tsUtils.registerModules(sourceFile, mod.namespace, mod.name);
+  });
+
+  const output = tsUtils.renderFile(sourceFile);
+  console.log('');
+  console.log(output);
 }
