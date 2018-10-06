@@ -50,25 +50,24 @@ export function copyAssets(lib: string, config: Configuration): void {
 }
 
 export function registerModules(
-  lib: string,
   moduleName: string,
   config: Configuration
 ): void {
-  const modulePath = path.join(
-    process.cwd(),
-    'src/app',
-    `${moduleName}.module.ts`
-  );
+  if (config && config.modules && config.modules.length > 0) {
+    const modulePath = path.join(
+      process.cwd(),
+      'src/app',
+      `${moduleName}.module.ts`
+    );
 
-  const source = fs.readFileSync(modulePath).toString();
-  const tsUtils = new TsUtils();
-  let sourceFile = tsUtils.parse(source);
+    const source = fs.readFileSync(modulePath).toString();
+    const tsUtils = new TsUtils();
 
-  config.modules.forEach(mod => {
-    sourceFile = tsUtils.registerModules(sourceFile, mod.namespace, mod.name);
-  });
+    let sourceFile = tsUtils.parse(source);
 
-  const output = tsUtils.renderFile(sourceFile);
-  console.log('');
-  console.log(output);
+    sourceFile = tsUtils.registerModules(sourceFile, config.modules);
+
+    const output = tsUtils.renderFile(sourceFile);
+    console.log(output);
+  }
 }

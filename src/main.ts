@@ -29,7 +29,7 @@ program
         copyAssets(libName, config);
       }
       if (!options.skipModule) {
-        registerModules(libName, moduleName, config);
+        registerModules(moduleName, config);
       }
     }
   });

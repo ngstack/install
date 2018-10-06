@@ -46,8 +46,7 @@ function hasImportDefined(
 }
 
 const createImportTransformer = (
-  moduleNamespace: string,
-  moduleName: string
+  modules: Array<{ namespace: string; name: string }>
 ) => {
   return (context: ts.TransformationContext) => {
     return (rootNode: ts.SourceFile) => {
@@ -55,23 +54,25 @@ const createImportTransformer = (
         node = ts.visitEachChild(node, visit, context);
 
         if (node.kind === ts.SyntaxKind.SourceFile) {
-          const newImport = ts.createImportDeclaration(
-            undefined,
-            undefined,
-            ts.createImportClause(
+          const newImports = modules.map(mod => {
+            return ts.createImportDeclaration(
               undefined,
-              ts.createNamedImports([
-                ts.createImportSpecifier(
-                  undefined,
-                  ts.createIdentifier(moduleName)
-                )
-              ])
-            ),
-            ts.createLiteral(moduleNamespace)
-          );
+              undefined,
+              ts.createImportClause(
+                undefined,
+                ts.createNamedImports([
+                  ts.createImportSpecifier(
+                    undefined,
+                    ts.createIdentifier(mod.name)
+                  )
+                ])
+              ),
+              ts.createLiteral(mod.namespace)
+            );
+          });
 
           const copy = ts.getMutableClone(node);
-          copy.statements = [newImport, ...copy.statements];
+          copy.statements = [...newImports, ...copy.statements];
           return copy;
         }
 
@@ -84,8 +85,7 @@ const createImportTransformer = (
           ) {
             return ts.createArrayLiteral(
               node.elements.concat(
-                ts.createIdentifier(moduleName)
-                // ts.createIdentifier('xxx')
+                ...modules.map(mod => ts.createIdentifier(mod.name))
               ),
               true
             );
@@ -118,15 +118,19 @@ export class TsUtils {
 
   registerModules(
     source: ts.SourceFile,
-    moduleNamespace: string,
-    moduleName: string
+    modules: Array<{ namespace: string; name: string }>
   ): ts.SourceFile {
-    if (!hasImportDefined(source, moduleNamespace, moduleName)) {
+    const newModules = modules.filter(mod => {
+      return !hasImportDefined(source, mod.namespace, mod.name);
+    });
+
+    if (newModules.length > 0) {
       const result = ts.transform(source, [
-        createImportTransformer(moduleNamespace, moduleName)
+        createImportTransformer(newModules)
       ]);
       return result.transformed[0];
     }
+
     return source;
   }
 
