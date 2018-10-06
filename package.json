@@ -1,0 +1,23 @@
+{
+  "name": "@ngstack/install",
+  "version": "0.1.0",
+  "description": "Angular Package Installer",
+  "main": "main.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "ngi": "./bin/ngi"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngstack/install.git"
+  },
+  "author": "Denys Vuika <denys.vuika@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngstack/install/issues"
+  },
+  "homepage": "https://github.com/ngstack/install#readme"
+}
