@@ -3,11 +3,11 @@ import path from 'path';
 
 import Configuration from './configuration';
 
-export function loadConfig(configPath: string): Configuration | null {
-  const filePath = path.resolve(configPath);
+export function loadConfig(lib: string): Configuration | null {
+  const configPath = path.join(process.cwd(), 'node_modules', lib, 'ngi.json');
 
   try {
-    return require(filePath);
+    return require(configPath);
   } catch {
     console.error('Error loading config');
     return null;

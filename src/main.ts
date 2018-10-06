@@ -3,21 +3,23 @@ import { loadConfig, install } from './utils';
 
 program
   .version('0.1.0', '-v, --version')
-  .usage('<lib>')
+  .usage('<lib> [name] [options]')
+  .arguments('<lib> [name]')
   .option(
-    '-c, --config <path>',
-    'set config path. defaults to ./ngi.json',
-    './ngi.json'
+    '-n, --name <name>',
+    'set library name if installing from custom sources',
+    null
   )
-  .arguments('<lib>')
-  .action((lib: string, options: any) => {
-    const config = loadConfig(options.config);
+  .option('--skip-install', 'skip installing dependency')
+  .action((lib: string, name: string, options: any) => {
+    console.log(name, options.skipInstall);
 
-    if (config) {
-      console.log(config);
-
+    if (!options.skipInstall) {
       install(lib);
     }
+
+    const config = loadConfig(name || lib);
+    console.log(config);
   });
 
 program.parse(process.argv);
