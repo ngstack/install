@@ -12,7 +12,7 @@ program
     null
   )
   .option('--module <module>', 'module to use for the registration', 'app')
-  .option('--skip-install', 'skip installing dependency')
+  .option('--skip-install', 'skip installing library')
   .option('--skip-assets', 'skip copying assets')
   .option('--skip-module', 'skip module registration')
   .action((lib: string, name: string, options: Options) => {
