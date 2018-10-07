@@ -76,3 +76,7 @@ Perform only application module integration for manually installed library
 ```sh
 ngi my-extension-0.0.1.tgz my-extension --skip-install --skip-assets
 ```
+
+## License
+
+MIT
