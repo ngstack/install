@@ -84,3 +84,8 @@ export function registerModules(
     fs.writeFileSync(modulePath, output);
   }
 }
+
+export function version(): string {
+  const packageInfo = require(path.join(__dirname, '..', 'package.json'));
+  return packageInfo.version;
+}

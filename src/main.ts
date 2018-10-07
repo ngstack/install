@@ -4,12 +4,13 @@ import {
   install,
   copyAssets,
   registerModules,
-  createConfig
+  createConfig,
+  version
 } from './utils';
 import Options from './options';
 
 program
-  .version('0.1.1', '-v, --version')
+  .version(version(), '-v, --version')
   .usage('[lib] [name] [options]')
   .arguments('[lib] [name]')
   .option(
@@ -24,8 +25,8 @@ program
   .option('--skip-module', 'skip module registration')
   .action((lib: string, name: string, options: Options) => {
     if (options.init) {
-      console.log('Creating new configuration file');
       createConfig();
+      console.log('Created new ngi.json file');
       return;
     }
 
