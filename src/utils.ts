@@ -16,6 +16,20 @@ export function loadConfig(lib: string): Configuration | undefined {
   }
 }
 
+export function createConfig(targetPath?: string): void {
+  const outputPath = path.join(targetPath || process.cwd(), 'ngi.json');
+  const data = JSON.stringify(
+    {
+      assets: [],
+      modules: []
+    },
+    null,
+    2
+  );
+
+  fs.writeFileSync(outputPath, data);
+}
+
 export function install(lib: string): boolean {
   if (!lib) {
     return false;
@@ -69,4 +83,9 @@ export function registerModules(
     const output = tsUtils.renderFile(sourceFile);
     fs.writeFileSync(modulePath, output);
   }
+}
+
+export function version(): string {
+  const packageInfo = require(path.join(__dirname, '..', 'package.json'));
+  return packageInfo.version;
 }
