@@ -1,6 +1,7 @@
 import sh from 'shelljs';
 import path from 'path';
 import fs from 'fs';
+import chalk from 'chalk';
 
 import Configuration from './configuration';
 import TsUtils from './ts-utils';
@@ -11,7 +12,7 @@ export function loadConfig(lib: string): Configuration | undefined {
   try {
     return require(configPath);
   } catch {
-    console.error('Error loading config');
+    console.log(chalk.yellow('warning'), 'Configuration file not found.');
     return undefined;
   }
 }
@@ -35,7 +36,7 @@ export function install(lib: string): boolean {
     return false;
   }
 
-  console.info(`Installing ${lib}`);
+  console.log(chalk.blue('info'), `Installing ${lib}`);
 
   if (sh.exec(`npm i ${lib}`).code !== 0) {
     return false;
@@ -57,7 +58,7 @@ export function copyAssets(lib: string, config: Configuration): void {
 
       sh.mkdir('-p', to);
 
-      console.log(`Copy: ${asset.from}`);
+      console.log(chalk.blue('info'), `copy ${asset.from}`);
       sh.cp(from, to);
     });
   }

@@ -8,6 +8,7 @@ import {
   version
 } from './utils';
 import Options from './options';
+import chalk from 'chalk';
 
 program
   .version(version(), '-v, --version')
@@ -26,7 +27,8 @@ program
   .action((lib: string, name: string, options: Options) => {
     if (options.init) {
       createConfig();
-      console.log('Created new ngi.json file');
+      console.log(chalk.green('success'), 'Created new ngi.json file');
+      console.log('✨ Done');
       return;
     }
 
@@ -44,12 +46,16 @@ program
     const config = loadConfig(libName);
     if (config) {
       if (!options.skipAssets) {
+        console.log(chalk.blue('info'), 'copying assets');
         copyAssets(libName, config);
       }
       if (!options.skipModule) {
+        console.log(chalk.blue('info'), 'registering modules');
         registerModules(moduleName, config);
       }
     }
+
+    console.log('✨ Done');
   });
 
 program.parse(process.argv);
