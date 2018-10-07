@@ -3,7 +3,7 @@ import { loadConfig, install, copyAssets, registerModules } from './utils';
 import Options from './options';
 
 program
-  .version('0.1.0', '-v, --version')
+  .version('0.1.1', '-v, --version')
   .usage('<lib> [name] [options]')
   .arguments('<lib> [name]')
   .option(
