@@ -16,6 +16,20 @@ export function loadConfig(lib: string): Configuration | undefined {
   }
 }
 
+export function createConfig(targetPath?: string): void {
+  const outputPath = path.join(targetPath || process.cwd(), 'ngi.json');
+  const data = JSON.stringify(
+    {
+      assets: [],
+      modules: []
+    },
+    null,
+    2
+  );
+
+  fs.writeFileSync(outputPath, data);
+}
+
 export function install(lib: string): boolean {
   if (!lib) {
     return false;

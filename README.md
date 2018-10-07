@@ -20,6 +20,7 @@ Run `ngi` without parameters to see the internal help.
 | ------------------ | ------------------------------------------------------------------ |
 | -v, --version      | output the version number                                          |
 | -n, --name \<name> | set library name if installing from custom sources (default: null) |
+| --init             | create a new configuration file                                    |
 | --module \<module> | module to use for the registration (default: app)                  |
 | --skip-install     | skip installing library                                            |
 | --skip-assets      | skip copying assets                                                |
