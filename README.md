@@ -2,6 +2,14 @@
 
 Command-line utility for installing Angular libraries into the Angular CLI-based projects.
 
+## Main features
+
+- Install library from the NPM or local package (i.e. tarball file)
+- Copy library assets to corresponding application folders
+- Register library modules in the application
+- Format updated application module with Prettier
+- Generate new configuration file for a library
+
 ## Getting the tool
 
 Install as a global package using the following command:
@@ -25,6 +33,7 @@ Run `ngi` without parameters to see the internal help.
 | --skip-install     | skip installing library                                            |
 | --skip-assets      | skip copying assets                                                |
 | --skip-module      | skip module registration                                           |
+| --skip-format      | skip code formatting                                               |
 | -h, --help         | output usage information                                           |
 
 ## Preparing libraries

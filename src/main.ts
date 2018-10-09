@@ -24,6 +24,7 @@ program
   .option('--skip-install', 'skip installing library')
   .option('--skip-assets', 'skip copying assets')
   .option('--skip-module', 'skip module registration')
+  .option('--skip-format', 'skip code formatting')
   .action((lib: string, name: string, options: Options) => {
     if (options.init) {
       createConfig();
@@ -51,7 +52,7 @@ program
       }
       if (!options.skipModule) {
         console.log(chalk.blue('info'), 'registering modules');
-        registerModules(moduleName, config);
+        registerModules(moduleName, config, options.skipFormat);
       }
     }
 
