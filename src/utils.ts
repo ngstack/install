@@ -2,6 +2,7 @@ import sh from 'shelljs';
 import path from 'path';
 import fs from 'fs';
 import chalk from 'chalk';
+import prettier from 'prettier';
 
 import Configuration from './configuration';
 import TsUtils from './ts-utils';
@@ -66,7 +67,8 @@ export function copyAssets(lib: string, config: Configuration): void {
 
 export function registerModules(
   moduleName: string,
-  config: Configuration
+  config: Configuration,
+  skipFormat?: boolean
 ): void {
   if (config && config.modules && config.modules.length > 0) {
     const modulePath = path.join(
@@ -82,11 +84,22 @@ export function registerModules(
     sourceFile = tsUtils.registerModules(sourceFile, config.modules);
 
     const output = tsUtils.renderFile(sourceFile);
-    fs.writeFileSync(modulePath, output);
+    fs.writeFileSync(modulePath, skipFormat ? output : format(output));
   }
 }
 
 export function version(): string {
   const packageInfo = require(path.join(__dirname, '..', 'package.json'));
   return packageInfo.version;
+}
+
+export function format(source: string): string {
+  console.log(chalk.blue('info'), `formatting code`);
+
+  const options = prettier.resolveConfig.sync(process.cwd()) || {
+    parser: 'typescript',
+    singleQuote: true
+  };
+
+  return prettier.format(source, options);
 }
