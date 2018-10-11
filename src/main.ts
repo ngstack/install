@@ -2,10 +2,10 @@ import program from 'commander';
 import {
   loadConfig,
   install,
-  copyAssets,
   registerModules,
   createConfig,
-  version
+  version,
+  registerAssets
 } from './utils';
 import Options from './options';
 import chalk from 'chalk';
@@ -47,8 +47,7 @@ program
     const config = loadConfig(libName);
     if (config) {
       if (!options.skipAssets) {
-        console.log(chalk.blue('info'), 'copying assets');
-        copyAssets(libName, config);
+        registerAssets(libName, config);
       }
       if (!options.skipModule) {
         console.log(chalk.blue('info'), 'registering modules');

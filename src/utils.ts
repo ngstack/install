@@ -6,6 +6,7 @@ import prettier from 'prettier';
 
 import Configuration from './configuration';
 import TsUtils from './ts-utils';
+import AngularConfig from './angular-config';
 
 export function loadConfig(lib: string): Configuration | undefined {
   const configPath = path.join(process.cwd(), 'node_modules', lib, 'ngi.json');
@@ -46,6 +47,7 @@ export function install(lib: string): boolean {
   return true;
 }
 
+/*
 export function copyAssets(lib: string, config: Configuration): void {
   if (config && config.assets && config.assets.length > 0) {
     const libPath = path.join(process.cwd(), 'node_modules', lib);
@@ -64,6 +66,7 @@ export function copyAssets(lib: string, config: Configuration): void {
     });
   }
 }
+*/
 
 export function registerModules(
   moduleName: string,
@@ -102,4 +105,61 @@ export function format(source: string): string {
   };
 
   return prettier.format(source, options);
+}
+
+export function registerAssets(lib: string, config: Configuration) {
+  if (!config || !config.assets || config.assets.length === 0) {
+    return;
+  }
+
+  console.log(chalk.blue('info'), 'registering assets');
+
+  const configPath = path.join(process.cwd(), 'angular.json');
+  let angularConfig: AngularConfig;
+
+  try {
+    angularConfig = require(configPath);
+  } catch {
+    console.log(chalk.yellow('warning'), 'angular.json file not found.');
+    return;
+  }
+
+  const project = angularConfig.projects[angularConfig.defaultProject];
+  if (!project) {
+    console.log(
+      chalk.yellow('warning'),
+      `project ${angularConfig.defaultProject} not found`
+    );
+    return;
+  }
+
+  const buildAssets = project.architect.build.options.assets || [];
+  const testAssets = project.architect.test.options.assets || [];
+
+  // todo: validate that it's not already registered
+
+  for (let asset of config.assets) {
+    if (typeof asset === 'object') {
+      const input = path.relative(
+        process.cwd(),
+        path.join(process.cwd(), 'node_modules', lib, asset.input)
+      );
+      buildAssets.push({ ...asset, input });
+      testAssets.push({ ...asset, input });
+    }
+
+    if (typeof asset === 'string') {
+      const input = path.relative(
+        process.cwd(),
+        path.join(process.cwd(), 'node_modules', lib, asset)
+      );
+      buildAssets.push(input);
+      testAssets.push(input);
+    }
+  }
+
+  project.architect.build.options.assets = buildAssets;
+  project.architect.test.options.assets = testAssets;
+
+  fs.writeFileSync(configPath, JSON.stringify(angularConfig, null, 2));
 }

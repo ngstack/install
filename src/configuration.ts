@@ -1,8 +1,11 @@
 interface Configuration {
-  assets?: Array<{
-    from: string;
-    to?: string;
-  }>;
+  assets?:
+    | string
+    | Array<{
+        glob: string;
+        input: string;
+        output: string;
+      }>;
 
   modules?: Array<{
     name: string;
