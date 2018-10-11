@@ -46,8 +46,9 @@ Example:
 {
   "assets": [
     {
-      "from": "assets/my-extension.json",
-      "to": "plugins"
+      "glob": "**/*.json",
+      "input": "./assets",
+      "output": "./assets/plugins"
     }
   ],
   "modules": [
@@ -61,9 +62,22 @@ Example:
 
 Based on the configuration above, the tool is going to perform the following actions:
 
-- copy a file `assets/my-extension` to the `src/assets/plugin` folder
+- copy all JSON files from `assets` to the `assets/plugin` folder
 - generate `import { MyExtensionModule } from 'my-extension';` in the `/src/app/app.module.ts`
 - put the `MyExtensionModule` into the module `imports` section
+
+### Asset configuration
+
+The asset configuration format is based on the [Angular CLI settings](https://github.com/angular/angular-cli/wiki/stories-asset-configuration).
+However, the `input` property defines the path relative to the library structure, rather than application one.
+
+```json
+{
+  "glob": "**/*.json",
+  "input": "./assets",
+  "output": "./assets/plugins"
+}
+```
 
 ## Examples
 

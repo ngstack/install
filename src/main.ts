@@ -2,13 +2,13 @@ import program from 'commander';
 import {
   loadConfig,
   install,
-  copyAssets,
   registerModules,
   createConfig,
   version
 } from './utils';
 import Options from './options';
-import chalk from 'chalk';
+import log from './log';
+import { registerAssets } from './assets';
 
 program
   .version(version(), '-v, --version')
@@ -28,7 +28,7 @@ program
   .action((lib: string, name: string, options: Options) => {
     if (options.init) {
       createConfig();
-      console.log(chalk.green('success'), 'Created new ngi.json file');
+      log.success('Created new ngi.json file');
       console.log('✨ Done');
       return;
     }
@@ -47,11 +47,9 @@ program
     const config = loadConfig(libName);
     if (config) {
       if (!options.skipAssets) {
-        console.log(chalk.blue('info'), 'copying assets');
-        copyAssets(libName, config);
+        registerAssets(libName, config);
       }
       if (!options.skipModule) {
-        console.log(chalk.blue('info'), 'registering modules');
         registerModules(moduleName, config, options.skipFormat);
       }
     }

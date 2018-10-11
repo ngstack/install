@@ -1,11 +1,11 @@
 import sh from 'shelljs';
 import path from 'path';
 import fs from 'fs';
-import chalk from 'chalk';
 import prettier from 'prettier';
 
-import Configuration from './configuration';
 import TsUtils from './ts-utils';
+import log from './log';
+import { Configuration } from './configuration';
 
 export function loadConfig(lib: string): Configuration | undefined {
   const configPath = path.join(process.cwd(), 'node_modules', lib, 'ngi.json');
@@ -13,7 +13,7 @@ export function loadConfig(lib: string): Configuration | undefined {
   try {
     return require(configPath);
   } catch {
-    console.log(chalk.yellow('warning'), 'Configuration file not found.');
+    log.warning('Configuration file not found.');
     return undefined;
   }
 }
@@ -37,7 +37,7 @@ export function install(lib: string): boolean {
     return false;
   }
 
-  console.log(chalk.blue('info'), `Installing ${lib}`);
+  log.info(`Installing ${lib}`);
 
   if (sh.exec(`npm i ${lib}`).code !== 0) {
     return false;
@@ -46,31 +46,14 @@ export function install(lib: string): boolean {
   return true;
 }
 
-export function copyAssets(lib: string, config: Configuration): void {
-  if (config && config.assets && config.assets.length > 0) {
-    const libPath = path.join(process.cwd(), 'node_modules', lib);
-    const localPath = path.join(process.cwd(), 'src/assets');
-
-    sh.mkdir('-p', localPath);
-
-    config.assets.forEach(asset => {
-      const from = path.join(libPath, asset.from);
-      const to = path.join(localPath, asset.to || '');
-
-      sh.mkdir('-p', to);
-
-      console.log(chalk.blue('info'), `copy ${asset.from}`);
-      sh.cp(from, to);
-    });
-  }
-}
-
 export function registerModules(
   moduleName: string,
   config: Configuration,
   skipFormat?: boolean
 ): void {
   if (config && config.modules && config.modules.length > 0) {
+    log.info('registering modules');
+
     const modulePath = path.join(
       process.cwd(),
       'src/app',
@@ -94,12 +77,14 @@ export function version(): string {
 }
 
 export function format(source: string): string {
-  console.log(chalk.blue('info'), `formatting code`);
+  log.info('formatting code');
 
   const options = prettier.resolveConfig.sync(process.cwd()) || {
     parser: 'typescript',
     singleQuote: true
   };
+
+  options.parser = options.parser || 'typescript';
 
   return prettier.format(source, options);
 }
