@@ -4,11 +4,11 @@ import {
   install,
   registerModules,
   createConfig,
-  version,
-  registerAssets
+  version
 } from './utils';
 import Options from './options';
 import log from './log';
+import { registerAssets } from './assets';
 
 program
   .version(version(), '-v, --version')

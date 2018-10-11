@@ -1,12 +1,5 @@
-interface Configuration {
-  assets?: Array<
-    | string
-    | {
-        glob: string;
-        input: string;
-        output: string;
-      }
-  >;
+export interface Configuration {
+  assets?: Array<string | GlobRule>;
 
   modules?: Array<{
     name: string;
@@ -14,4 +7,8 @@ interface Configuration {
   }>;
 }
 
-export default Configuration;
+export interface GlobRule {
+  glob: string;
+  input: string;
+  output: string;
+}
