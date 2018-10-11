@@ -104,6 +104,8 @@ export function format(source: string): string {
     singleQuote: true
   };
 
+  options.parser = options.parser || 'typescript';
+
   return prettier.format(source, options);
 }
 
