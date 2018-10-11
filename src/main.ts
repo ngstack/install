@@ -8,7 +8,7 @@ import {
   registerAssets
 } from './utils';
 import Options from './options';
-import chalk from 'chalk';
+import log from './log';
 
 program
   .version(version(), '-v, --version')
@@ -28,7 +28,7 @@ program
   .action((lib: string, name: string, options: Options) => {
     if (options.init) {
       createConfig();
-      console.log(chalk.green('success'), 'Created new ngi.json file');
+      log.success('Created new ngi.json file');
       console.log('✨ Done');
       return;
     }
@@ -50,7 +50,6 @@ program
         registerAssets(libName, config);
       }
       if (!options.skipModule) {
-        console.log(chalk.blue('info'), 'registering modules');
         registerModules(moduleName, config, options.skipFormat);
       }
     }

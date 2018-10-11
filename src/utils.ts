@@ -1,12 +1,12 @@
 import sh from 'shelljs';
 import path from 'path';
 import fs from 'fs';
-import chalk from 'chalk';
 import prettier from 'prettier';
 
 import Configuration from './configuration';
 import TsUtils from './ts-utils';
 import AngularConfig from './angular-config';
+import log from './log';
 
 export function loadConfig(lib: string): Configuration | undefined {
   const configPath = path.join(process.cwd(), 'node_modules', lib, 'ngi.json');
@@ -14,7 +14,7 @@ export function loadConfig(lib: string): Configuration | undefined {
   try {
     return require(configPath);
   } catch {
-    console.log(chalk.yellow('warning'), 'Configuration file not found.');
+    log.warning('Configuration file not found.');
     return undefined;
   }
 }
@@ -38,7 +38,7 @@ export function install(lib: string): boolean {
     return false;
   }
 
-  console.log(chalk.blue('info'), `Installing ${lib}`);
+  log.info(`Installing ${lib}`);
 
   if (sh.exec(`npm i ${lib}`).code !== 0) {
     return false;
@@ -74,6 +74,8 @@ export function registerModules(
   skipFormat?: boolean
 ): void {
   if (config && config.modules && config.modules.length > 0) {
+    log.info('registering modules');
+
     const modulePath = path.join(
       process.cwd(),
       'src/app',
@@ -97,7 +99,7 @@ export function version(): string {
 }
 
 export function format(source: string): string {
-  console.log(chalk.blue('info'), `formatting code`);
+  log.info('formatting code');
 
   const options = prettier.resolveConfig.sync(process.cwd()) || {
     parser: 'typescript',
@@ -114,7 +116,7 @@ export function registerAssets(lib: string, config: Configuration) {
     return;
   }
 
-  console.log(chalk.blue('info'), 'registering assets');
+  log.info('registering assets');
 
   const configPath = path.join(process.cwd(), 'angular.json');
   let angularConfig: AngularConfig;
@@ -122,16 +124,13 @@ export function registerAssets(lib: string, config: Configuration) {
   try {
     angularConfig = require(configPath);
   } catch {
-    console.log(chalk.yellow('warning'), 'angular.json file not found.');
+    log.warning('angular.json file not found.');
     return;
   }
 
   const project = angularConfig.projects[angularConfig.defaultProject];
   if (!project) {
-    console.log(
-      chalk.yellow('warning'),
-      `project ${angularConfig.defaultProject} not found`
-    );
+    log.warning(`project ${angularConfig.defaultProject} not found`);
     return;
   }
 
