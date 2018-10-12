@@ -1,14 +1,13 @@
 import program from 'commander';
-import {
-  loadConfig,
-  install,
-  registerModules,
-  createConfig,
-  version
-} from './utils';
+import { loadConfig, install, createConfig, version } from './utils';
 import Options from './options';
 import log from './log';
 import { registerAssets } from './assets';
+import { registerModules, parseModules } from './modules';
+
+function list(val) {
+  return val.split(',');
+}
 
 program
   .version(version(), '-v, --version')
@@ -21,6 +20,7 @@ program
   )
   .option('--init', 'create a new configuration file')
   .option('--module <module>', 'module to use for the registration', 'app')
+  .option('--import [modules]', 'list of modules to import', list)
   .option('--skip-install', 'skip installing library')
   .option('--skip-assets', 'skip copying assets')
   .option('--skip-module', 'skip module registration')
@@ -50,7 +50,12 @@ program
         registerAssets(libName, config);
       }
       if (!options.skipModule) {
-        registerModules(moduleName, config, options.skipFormat);
+        registerModules(moduleName, config.modules, options.skipFormat);
+      }
+
+      if (options.import) {
+        const modules = parseModules(libName, options.import);
+        registerModules(moduleName, modules, options.skipFormat);
       }
     }
 

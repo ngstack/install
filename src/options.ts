@@ -5,6 +5,7 @@ interface Options {
   skipModule?: boolean;
   skipFormat?: boolean;
   module?: string;
+  import?: Array<string>;
 }
 
 export default Options;
