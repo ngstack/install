@@ -30,6 +30,7 @@ Run `ngi` without parameters to see the internal help.
 | -n, --name \<name> | set library name if installing from custom sources (default: null) |
 | --init             | create a new configuration file                                    |
 | --module \<module> | module to use for the registration (default: app)                  |
+| --import [modules] | list of modules to import                                          |
 | --skip-install     | skip installing library                                            |
 | --skip-assets      | skip copying assets                                                |
 | --skip-module      | skip module registration                                           |
@@ -78,6 +79,32 @@ However, the `input` property defines the path relative to the library structure
   "output": "./assets/plugins"
 }
 ```
+
+## Installing arbitrary libraries
+
+The tool works best with the `ngi.json` configuration files that are published with the libraries.
+However it is also possible to install an arbitrary Angular library.
+
+In this case you need to provide one or multiple module names to import.
+
+```sh
+ngi @company/library --import=Module1,Module2
+```
+
+As a result of the command above, the tool is going to install `@company/library` from the NPM,
+and setup the main application module with two imports:
+
+```ts
+import { Module1 } from '@company/library';
+import { Module2 } from '@company/library';
+
+@NgModule({
+  imports: [Module1, Module2]
+})
+export class AppModule {}
+```
+
+Note that you will have to setup asset rules for `angular.json` file manually.
 
 ## Examples
 
