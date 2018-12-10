@@ -4,6 +4,8 @@ interface Options {
   skipAssets?: boolean;
   skipModule?: boolean;
   skipFormat?: boolean;
+  skipStyles?: boolean;
+  skipScripts?: boolean;
   module?: string;
   import?: Array<string>;
 }

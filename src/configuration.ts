@@ -1,6 +1,8 @@
 export interface Configuration {
   assets?: Array<string | GlobRule>;
   modules?: Array<ModuleRef>;
+  styles?: Array<string>;
+  scripts?: Array<string>;
 }
 
 export interface ModuleRef {

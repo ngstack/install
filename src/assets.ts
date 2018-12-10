@@ -5,6 +5,22 @@ import log from './log';
 import AngularConfig from './angular-config';
 import { Configuration, GlobRule } from './configuration';
 
+const configPath = path.join(process.cwd(), 'angular.json');
+
+function loadConfig(): AngularConfig {
+  try {
+    const angularConfig = require(configPath);
+    return angularConfig;
+  } catch {
+    log.warning('angular.json file not found.');
+    return null;
+  }
+}
+
+function saveConfig(config: AngularConfig) {
+  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+}
+
 export function registerAssets(lib: string, config: Configuration) {
   if (!config || !config.assets || config.assets.length === 0) {
     return;
@@ -12,13 +28,8 @@ export function registerAssets(lib: string, config: Configuration) {
 
   log.info('registering assets');
 
-  const configPath = path.join(process.cwd(), 'angular.json');
-  let angularConfig: AngularConfig;
-
-  try {
-    angularConfig = require(configPath);
-  } catch {
-    log.warning('angular.json file not found.');
+  const angularConfig = loadConfig();
+  if (!angularConfig) {
     return;
   }
 
@@ -46,7 +57,85 @@ export function registerAssets(lib: string, config: Configuration) {
   project.architect.build.options.assets = buildAssets;
   project.architect.test.options.assets = testAssets;
 
-  fs.writeFileSync(configPath, JSON.stringify(angularConfig, null, 2));
+  saveConfig(angularConfig);
+}
+
+export function registerStyles(lib: string, config: Configuration) {
+  if (!config || !config.styles || config.styles.length === 0) {
+    return;
+  }
+
+  log.info('registering styles');
+
+  const angularConfig = loadConfig();
+  if (!angularConfig) {
+    return;
+  }
+
+  const project = angularConfig.projects[angularConfig.defaultProject];
+  if (!project) {
+    log.warning(`project ${angularConfig.defaultProject} not found`);
+    return;
+  }
+
+  const buildStyles = project.architect.build.options.styles || [];
+  const testStyles = project.architect.test.options.styles || [];
+  const libPath = path.join('node_modules', lib);
+
+  for (const stylePath of config.styles) {
+    const libStylePath = path.join(libPath, stylePath);
+
+    if (!buildStyles.includes(libStylePath)) {
+      buildStyles.push(libStylePath);
+    }
+
+    if (!testStyles.includes(libStylePath)) {
+      testStyles.push(libStylePath);
+    }
+  }
+
+  project.architect.build.options.styles = buildStyles;
+  project.architect.test.options.styles = testStyles;
+  saveConfig(angularConfig);
+}
+
+export function registerScripts(lib: string, config: Configuration) {
+  if (!config || !config.scripts || config.scripts.length === 0) {
+    return;
+  }
+
+  log.info('registering scripts');
+
+  const angularConfig = loadConfig();
+  if (!angularConfig) {
+    return;
+  }
+
+  const project = angularConfig.projects[angularConfig.defaultProject];
+  if (!project) {
+    log.warning(`project ${angularConfig.defaultProject} not found`);
+    return;
+  }
+
+  const buildScripts = project.architect.build.options.scripts || [];
+  const testScripts = project.architect.test.options.scripts || [];
+  const libPath = path.join('node_modules', lib);
+
+  for (const scriptPath of config.scripts) {
+    const libScriptPath = path.join(libPath, scriptPath);
+
+    if (!buildScripts.includes(libScriptPath)) {
+      buildScripts.push(libScriptPath);
+    }
+
+    if (!testScripts.includes(libScriptPath)) {
+      testScripts.push(libScriptPath);
+    }
+  }
+
+  project.architect.build.options.scripts = buildScripts;
+  project.architect.test.options.scripts = testScripts;
+  saveConfig(angularConfig);
 }
 
 function registerObject(

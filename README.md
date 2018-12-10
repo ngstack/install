@@ -5,7 +5,7 @@ Command-line utility for installing Angular libraries into the Angular CLI-based
 ## Main features
 
 - Install library from the NPM or local package (i.e. tarball file)
-- Copy library assets to corresponding application folders
+- Register assets, styles and scripts with `angular.json`
 - Register library modules in the application
 - Format updated application module with Prettier
 - Generate new configuration file for a library
@@ -43,7 +43,7 @@ Add and publish an `ngi.json` file as part of your library.
 
 Example:
 
-```sh
+```json
 {
   "assets": [
     {
@@ -77,6 +77,36 @@ However, the `input` property defines the path relative to the library structure
   "glob": "**/*.json",
   "input": "./assets",
   "output": "./assets/plugins"
+}
+```
+
+### Styles and Scripts
+
+You can also register custom styles and scripts in the corresponding sections within `angular.json` file.
+
+Example (**ngi.json**):
+
+```json
+{
+  "styles": ["./styles/one.css", "./styles/two.css"],
+  "scripts": ["./scripts/test1.js", "./scripts/test2.js"]
+}
+```
+
+Upon execution the `ngi` tool is going to use relative paths to the extension folder.
+
+Example (**angular.json**)
+
+```json
+{
+  "styles": [
+    "node_modules/my-extension/styles/one.css",
+    "node_modules/my-extension/styles/two.css"
+  ],
+  "scripts": [
+    "node_modules/my-extension/scripts/test1.js",
+    "node_modules/my-extension/scripts/test2.js"
+  ]
 }
 ```
 

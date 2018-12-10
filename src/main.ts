@@ -2,7 +2,7 @@ import program from 'commander';
 import { loadConfig, install, createConfig, version } from './utils';
 import Options from './options';
 import log from './log';
-import { registerAssets } from './assets';
+import { registerAssets, registerStyles, registerScripts } from './assets';
 import { registerModules, parseModules } from './modules';
 
 function list(val) {
@@ -22,9 +22,11 @@ program
   .option('--module <module>', 'module to use for the registration', 'app')
   .option('--import [modules]', 'list of modules to import', list)
   .option('--skip-install', 'skip installing library')
-  .option('--skip-assets', 'skip copying assets')
+  .option('--skip-assets', 'skip registering assets')
   .option('--skip-module', 'skip module registration')
   .option('--skip-format', 'skip code formatting')
+  .option('--skip-styles', 'skip registering styles')
+  .option('--skip-scripts', 'skip registering scripts')
   .action((lib: string, name: string, options: Options) => {
     if (options.init) {
       createConfig();
@@ -49,6 +51,15 @@ program
       if (!options.skipAssets) {
         registerAssets(libName, config);
       }
+
+      if (!options.skipStyles) {
+        registerStyles(libName, config);
+      }
+
+      if (!options.skipScripts) {
+        registerScripts(libName, config);
+      }
+
       if (!options.skipModule) {
         registerModules(moduleName, config.modules, options.skipFormat);
       }

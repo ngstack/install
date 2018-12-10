@@ -22,7 +22,9 @@ export function createConfig(targetPath?: string): void {
   const data = JSON.stringify(
     {
       assets: [],
-      modules: []
+      modules: [],
+      styles: [],
+      scripts: []
     },
     null,
     2
