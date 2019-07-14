@@ -1,4 +1,6 @@
-# @ngstack/install
+# Install
+
+[![Build Status](https://dev.azure.com/ngstack/install/_apis/build/status/ngstack.install?branchName=master)](https://dev.azure.com/ngstack/install/_build/latest?definitionId=3&branchName=master)
 
 Command-line utility for installing Angular libraries into the Angular CLI-based projects.
 
