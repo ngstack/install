@@ -4,6 +4,10 @@
 
 Command-line utility for installing Angular libraries into the Angular CLI-based projects.
 
+<a href="https://www.buymeacoffee.com/denys" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="51" width="217">
+</a>
+
 ## Main features
 
 - Install library from the NPM or local package (i.e. tarball file)
