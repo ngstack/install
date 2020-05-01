@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/ngstack/install#readme",
   "dependencies": {
-    "chalk": "^3.0.0",
+    "chalk": "^4.0.0",
     "commander": "^5.0.0",
     "prettier": "^2.0.2",
     "shelljs": "^0.8.2",
